@@ -1,0 +1,9 @@
+Django==5.1.7
+pandas
+numpy
+tensorflow
+statsmodels
+pmdarima
+pyecharts
+scikit-learn
+requests

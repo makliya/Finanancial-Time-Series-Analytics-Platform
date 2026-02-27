@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Account</title>
+
+  <!-- Correct: script uses src, not href -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+  <link rel="stylesheet" href="/static/bootstrap-3.4.1/dist/css/bootstrap.css">
+
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-image: url("{% static 'bg.jpg' %}");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-box {
+      background: white;
+      border-radius: 15px;
+      width: 400px;
+      padding: 30px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h3 {
+      color: rgb(0, 0, 0);
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      font-size: 16px;
+      color: #333; /* was white; hard to read on white card */
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #5cb85c;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+
+    button[type="submit"] {
+      background-color: #28a745;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #218838;
+    }
+
+    a {
+      color: #147ef0;
+      text-decoration: none;
+      font-size: 16px;
+      display: inline-block;
+      margin-top: 15px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    span {
+      color: red;
+      font-size: 14px;
+    }
+
+    div {
+      margin-top: 10px;
+    }
+
+    .error-message {
+      font-size: 14px;
+      color: red;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 600px) {
+      .login-box {
+        width: 90%;
+        padding: 20px;
+      }
+
+      h3 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-box">
+    <h3>Create Account</h3>
+
+    <form method="post" action="/register/" novalidate>
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="{{ form.username.id_for_label }}">Username</label>
+        {{ form.username }}
+        <span>{{ form.username.errors.0 }}</span>
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.password.id_for_label }}">Password</label>
+        {{ form.password }}
+        <span>{{ form.password.errors.0 }}</span>
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.password1.id_for_label }}">Confirm password</label>
+        {{ form.password1 }}
+        <span>{{ form.password1.errors.0 }}</span>
+      </div>
+
+      <button type="submit" class="btn btn-success">Sign up</button>
+
+      <div style="text-align:center;margin-top:10px">
+        <a href="/login/">Back to login</a>
+      </div>
+
+      <div style="text-align:center;margin-top:10px">
+        <span>{{ error }}</span>
+      </div>
+    </form>
+  </div>
+
+  <script src="/static/jquery-3.6.0.min.js"></script>
+</body>
+</html>

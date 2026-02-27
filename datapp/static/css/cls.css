@@ -1,0 +1,96 @@
+body {
+	--fsAddBuffer: 22px;
+}
+[id='royaleapi_leaderboard_1'],
+[id='royaleapi_leaderboard_atf'],
+[id='royaleapi_incontent_leaderboard_btf'],
+[id='royaleapi_sidewall_left'],
+[id='royaleapi_sidewall_right'],
+[id='royaleapi_300x250'],
+[id='royaleapi_970x250'],
+[id='royaleapi_incontent_leaderboard_2'],
+[id='royaleapi_incontent_leaderboard_3'],
+[id='royaleapi_incontent_leaderboard_4'],
+[id='royaleapi_160x600'],
+[id='royaleapi_fs_970x250'],
+[id='royaleapi_fs_970x90'],
+[id='royaleapi_tiles_mediumrectangle'],
+[id='royaleapi_small_leaderboard'] {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	min-height: calc(var(--height) + var(--fsAddBuffer));
+	height: calc(var(--height) + var(--fsAddBuffer));
+	width: 100%;
+}
+[id='royaleapi_incontent_leaderboard_2'] {
+		--height: 100px;
+}
+[id='royaleapi_incontent_leaderboard_3'] {
+		--height: 100px;
+}
+[id='royaleapi_incontent_leaderboard_4'] {
+		--height: 100px;
+}
+[id='royaleapi_incontent_leaderboard_btf'] {
+		--height: 250px;
+}
+[id='royaleapi_leaderboard_1'] {
+		--height: 250px;
+}
+[id='royaleapi_small_leaderboard'] {
+		--height: 100px;
+}
+[id='royaleapi_tiles_mediumrectangle'] {
+		--height: 280px;
+}
+@media only screen and (min-width: 768px) {
+	[id='royaleapi_160x600'] {
+		--height: 600px;
+	}
+	[id='royaleapi_300x250'] {
+		--height: 250px;
+	}
+	[id='royaleapi_970x250'] {
+		--height: 250px;
+	}
+	[id='royaleapi_fs_970x250'] {
+		--height: 250px;
+	}
+	[id='royaleapi_fs_970x90'] {
+		--height: 90px;
+	}
+	[id='royaleapi_incontent_leaderboard_2'] {
+		--height: 90px;
+	}
+	[id='royaleapi_incontent_leaderboard_3'] {
+		--height: 90px;
+	}
+	[id='royaleapi_incontent_leaderboard_4'] {
+		--height: 90px;
+	}
+	[id='royaleapi_incontent_leaderboard_btf'] {
+		--height: 250px;
+	}
+	[id='royaleapi_leaderboard_1'] {
+		--height: 90px;
+	}
+	[id='royaleapi_leaderboard_atf'] {
+		--height: 100px;
+	}
+	[id='royaleapi_small_leaderboard'] {
+		--height: 100px;
+	}
+	[id='royaleapi_tiles_mediumrectangle'] {
+		--height: 280px;
+	}
+}
+@media only screen and (min-width: 1850px) {
+	[id='royaleapi_sidewall_left'] {
+		--height: 600px;
+	}
+	[id='royaleapi_sidewall_right'] {
+		--height: 600px;
+	}
+}

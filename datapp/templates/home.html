@@ -1,0 +1,347 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block content %}
+
+<meta name="viewport"
+      content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0">
+
+<style>
+  h1 { text-align: center; color: #333; }
+
+  /* Search and filter area */
+  .search-filter {
+    margin: 30px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .search-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-grow: 1;
+    max-width: 800px;
+  }
+
+  .search-box input[type="text"],
+  .filter-box select {
+    padding: 10px 15px;
+    border: 1px solid #d1d3e2;
+    border-radius: 5px;
+    flex-grow: 1;
+    font-size: 14px;
+    transition: border-color 0.3s;
+  }
+
+  .search-box input[type="text"]:focus,
+  .filter-box select:focus {
+    outline: none;
+    border-color: #4e73df;
+    box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.2);
+  }
+
+  .filter-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .filter-box label {
+    font-weight: 600;
+    color: #4e73df;
+    white-space: nowrap;
+  }
+
+  .search-box button,
+  .filter-box button {
+    padding: 10px 20px;
+    background-color: #4e73df;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .search-box button:hover,
+  .filter-box button:hover {
+    background-color: #2e59d9;
+    transform: translateY(-1px);
+  }
+
+  .reset-btn {
+    background-color: #e74a3b !important;
+  }
+
+  .reset-btn:hover {
+    background-color: #be2617 !important;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 15px;
+  }
+
+  /* Table styles */
+  .data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .data-table thead th {
+    background-color: #4e73df;
+    color: white;
+    font-weight: 600;
+    padding: 12px 15px;
+    border: none;
+    position: sticky;
+    top: 0;
+  }
+
+  .data-table tbody tr {
+    transition: all 0.2s ease;
+  }
+
+  .data-table tbody tr:hover {
+    background-color: #f8f9fc;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .data-table tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e3e6f0;
+    vertical-align: middle;
+  }
+
+  /* Pagination */
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .pagination-info {
+    color: #6c757d;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .pagination { margin: 0; }
+
+  .page-item { margin: 0 3px; }
+
+  .page-item.active .page-link {
+    background-color: #4e73df;
+    border-color: #4e73df;
+    box-shadow: 0 2px 4px rgba(78, 115, 223, 0.3);
+  }
+
+  .page-link {
+    color: #4e73df;
+    border: 1px solid #d1d3e2;
+    padding: 0.375rem 0.75rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .page-link:hover {
+    background-color: #f8f9fc;
+    color: #224abe;
+    border-color: #d1d3e2;
+  }
+
+  .page-item.disabled .page-link { color: #b7b9cc; }
+
+  /* All cells center */
+  .data-table td,
+  .data-table th {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .pagination-container {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .data-table thead { display: none; }
+
+    .data-table tbody tr {
+      display: block;
+      margin-bottom: 15px;
+      border: 1px solid #e3e6f0;
+      border-radius: 8px;
+      padding: 10px;
+      background: white;
+    }
+
+    .data-table tbody td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-bottom: 1px solid #e3e6f0;
+    }
+
+    .data-table tbody td::before {
+      content: attr(data-label);
+      font-weight: 600;
+      color: #4e73df;
+      margin-right: 15px;
+    }
+
+    .data-table tbody td:last-child { border-bottom: none; }
+  }
+</style>
+
+<!-- Search and Filter -->
+<div class="search-filter">
+  <!-- Search box -->
+  <div class="search-box">
+    <form method="GET" action="">
+      <input
+        type="text"
+        name="search"
+        placeholder="Search by stock code or date"
+        value="{{ search_query }}"
+      >
+      <button type="submit">Search</button>
+    </form>
+  </div>
+
+  <!-- Filter box -->
+  <div class="filter-box">
+    <form method="GET" action="">
+      {% if search_query %}
+        <input type="hidden" name="search" value="{{ search_query }}">
+      {% endif %}
+
+      <label for="code-filter">Filter:</label>
+      <select id="code-filter" name="code" onchange="this.form.submit()">
+        <option value="">All stocks</option>
+        {% for code in codes %}
+          <option value="{{ code.code }}" {% if selected_code == code.code %}selected{% endif %}>
+            {{ code.code }}
+          </option>
+        {% endfor %}
+      </select>
+
+      {% if selected_code or search_query %}
+        <a href="?" class="reset-btn" style="
+          padding: 10px 20px;
+          background-color: #e74a3b;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          font-weight: 600;
+          transition: all 0.3s;
+          text-decoration: none;
+          display: inline-block;
+          text-align: center;
+        ">Reset</a>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<div class="container">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Date</th>
+        <th>Open</th>
+        <th>Close</th>
+        <th>High</th>
+        <th>Low</th>
+        <th>Volume</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in data_page %}
+      <tr>
+        <td data-label="Code">{{ item.code }}</td>
+        <td data-label="Date">{{ item.date|date:"Y-m-d" }}</td>
+        <td data-label="Open">{{ item.open|floatformat:2 }}</td>
+        <td data-label="Close">{{ item.close|floatformat:2 }}</td>
+        <td data-label="High">{{ item.high|floatformat:2 }}</td>
+        <td data-label="Low">{{ item.low|floatformat:2 }}</td>
+        <td data-label="Volume">{{ item.volume|floatformat:0 }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Pagination + info -->
+  <div class="pagination-container">
+    <div class="pagination-info">
+      Showing {{ data_page.start_index }}–{{ data_page.end_index }} of {{ data_page.paginator.count }} records
+    </div>
+
+    <ul class="pagination">
+      {% if data_page.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1" aria-label="First page">
+          <span aria-hidden="true">&laquo;&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ data_page.previous_page_number }}" aria-label="Previous page">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% endif %}
+
+      {% for num in data_page.paginator.page_range %}
+        {% if data_page.number == num %}
+          <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% elif num > data_page.number|add:'-3' and num < data_page.number|add:'3' %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if data_page.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ data_page.next_page_number }}" aria-label="Next page">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ data_page.paginator.num_pages }}" aria-label="Last page">
+          <span aria-hidden="true">&raquo;&raquo;</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}

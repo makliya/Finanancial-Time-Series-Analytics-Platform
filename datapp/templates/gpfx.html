@@ -1,0 +1,197 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block content %}
+
+<meta name="viewport"
+      content="width=device-width, user-scalable=yes, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+<style>
+  :root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --accent-color: #e74c3c;
+    --dark-color: #2c3e50;
+    --light-color: #ecf0f1;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius: 10px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--dark-color);
+  }
+
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 25px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .card-body {
+    padding: 20px;
+    height: 400px;
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .full-width .card-body {
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    .dashboard { grid-template-columns: 1fr; }
+    .card-body { height: auto; }
+    .full-width .card-body { height: auto; }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card:nth-child(1) { animation-delay: 0.1s; }
+  .card:nth-child(2) { animation-delay: 0.2s; }
+  .card:nth-child(3) { animation-delay: 0.3s; }
+  .card:nth-child(4) { animation-delay: 0.4s; }
+
+  .stock-list {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .stock-list li {
+    margin: 6px 0;
+  }
+  .stock-list a {
+    text-decoration: none;
+  }
+
+  .metrics-box {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #f7f7f7;
+    border-radius: 8px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .metrics-box b {
+    margin-right: 8px;
+  }
+</style>
+
+<div class="header"></div>
+
+<div class="dashboard">
+
+  <!-- Summary stats -->
+  <div class="card full-width" style="height: 200px;">
+    <div class="card-header" style="background: linear-gradient(135deg, #ba3eeb, #ef425f);">
+      Stock Data Summary
+    </div>
+    <div class="card-body" style="display:flex; flex-direction:row; padding:20px; justify-content:space-around; background-color:#fff;">
+      <div style="display:flex; flex-direction:column; text-align:center; padding:0 15px;">
+        <p style="font-size:35px; font-weight:bold; color:#be29e7; margin-bottom:5px;">{{ data_sum }}</p>
+        <p style="font-size:20px; color:#ff9012; margin-top:0;">Total records</p>
+      </div>
+
+      <div style="display:flex; flex-direction:column; text-align:center; padding:0 15px;">
+        <p style="font-size:35px; font-weight:bold; color:#2adbac; margin-bottom:5px;">{{ gps }}</p>
+        <p style="font-size:20px; color:#fd9023; margin-top:0;">Number of stocks</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Candlestick chart -->
+  <div class="card full-width">
+    <div class="card-header">
+      Candlestick Chart (K-line)
+    </div>
+
+    <div class="card-body">
+      {% if chart %}
+        <div style="width: 100%; height: 600px;">
+          {{ chart|safe }}
+        </div>
+      {% else %}
+        <h3>Select a stock code</h3>
+        <ul class="stock-list">
+          {% for stock in stock_list %}
+            <li><a href="?code={{ stock.code }}">{{ stock.code }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- LSTM -->
+  <div class="card full-width">
+    <div class="card-header" style="background: linear-gradient(135deg, #ff7919, #e03ed3);">
+      LSTM Forecast (Test Set)
+    </div>
+    <div class="card-body">
+      {{ lstm_chart|safe }}
+
+      {% if lstm_metrics %}
+      <div class="metrics-box">
+        <b>Evaluation (Test Set):</b>
+        MAE: {{ lstm_metrics.MAE }} |
+        RMSE: {{ lstm_metrics.RMSE }} |
+        R²: {{ lstm_metrics.R2 }} |
+        MAPE: {{ lstm_metrics.MAPE }}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ARIMA -->
+  <div class="card full-width">
+    <div class="card-header" style="background: linear-gradient(135deg, #9b59b6, #e74c3c);">
+      ARIMA Forecast (Test Set)
+    </div>
+    <div class="card-body">
+      {{ arima_chart|safe }}
+
+      {% if arima_metrics %}
+      <div class="metrics-box">
+        <b>Evaluation (Test Set):</b>
+        MAE: {{ arima_metrics.MAE }} |
+        RMSE: {{ arima_metrics.RMSE }} |
+        R²: {{ arima_metrics.R2 }} |
+        MAPE: {{ arima_metrics.MAPE }}
+        {% if arima_metrics.Order %}
+          | Order: {{ arima_metrics.Order }}
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

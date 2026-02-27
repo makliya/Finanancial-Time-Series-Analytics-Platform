@@ -31,25 +31,25 @@ http://127.0.0.1:8000
 ### 📊 Dashboard Overview
 
 
-![Dashboard](Financial-Time-Series-Analytics-Platform/datapp/images/dashboard.png)
-![alt text](Financial-Time-Series-Analytics-Platform/datapp/images/dashboard1.png)
+![Dashboard](datapp/images/dashboard.png)
+![alt text](datapp/images/dashboard1.png)
 
 ------------------------------------------------------------------------
 
 ### 📈 LSTM Forecast (Test Set)
 
 
-![LSTM Forecast](Financial-Time-Series-Analytics-Platform/datapp/images/lstm.png)
+![LSTM Forecast](datapp/images/lstm.png)
 
 ------------------------------------------------------------------------
 
 ### 📉 ARIMA Forecast (Test Set)
 
-![ARIMA Forecast](Financial-Time-Series-Analytics-Platform/datapp/images/arima.png)
+![ARIMA Forecast](datapp/images/arima.png)
 
-![alt text](Financial-Time-Series-Analytics-Platform/datapp/images/home.png)
+![alt text](datapp/images/home.png)
 
-![alt text](Financial-Time-Series-Analytics-Platform/datapp/images/collect.png)
+![alt text](datapp/images/collect.png)
 
 ------------------------------------------------------------------------
 
